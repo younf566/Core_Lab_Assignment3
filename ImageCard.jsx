@@ -1,7 +1,5 @@
 import React from 'react'
 
-// ImageCard is a presentational component that receives data via props.
-// It does not manage its own state — the parent controls behavior (drag, order).
 export default function ImageCard({ img, idx, onDragStart, onDragEnter, className }) {
   return (
     <article

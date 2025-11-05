@@ -1,6 +1,5 @@
 import React from 'react'
 
-// Renders existing color-separated PNGs as stacked layers with blend modes.
 export default function PartLayer({ part }) {
   if (!part) return null
 

@@ -17,7 +17,6 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
           'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
         )
 
-        // Initialize Face Landmarker
         faceLandmarkerRef.current = await FaceLandmarker.createFromOptions(vision, {
           baseOptions: {
             modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
@@ -28,7 +27,6 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
           numFaces: 1
         })
 
-        // Initialize Hand Landmarker
         handLandmarkerRef.current = await HandLandmarker.createFromOptions(vision, {
           baseOptions: {
             modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
@@ -38,7 +36,6 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
           numHands: 2
         })
 
-        // Start webcam
         const stream = await navigator.mediaDevices.getUserMedia({ 
           video: { width: 640, height: 480 } 
         })
@@ -66,32 +63,26 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
       try {
         const startTimeMs = performance.now()
 
-        // Detect face landmarks
         const faceResults = faceLandmarkerRef.current.detectForVideo(videoRef.current, startTimeMs)
         if (faceResults.faceLandmarks && faceResults.faceLandmarks[0]) {
           const landmarks = faceResults.faceLandmarks[0]
           
-          // Eyes: average of left and right eye centers
           const leftEye = { x: (landmarks[33].x + landmarks[133].x) / 2, y: (landmarks[33].y + landmarks[133].y) / 2 }
           const rightEye = { x: (landmarks[362].x + landmarks[263].x) / 2, y: (landmarks[362].y + landmarks[263].y) / 2 }
           const eyes = { x: (leftEye.x + rightEye.x) / 2, y: (leftEye.y + rightEye.y) / 2 }
 
-          // Lips: center of mouth
           const lips = { x: landmarks[13].x, y: landmarks[13].y }
 
-          // Nose: tip of nose
           const nose = { x: landmarks[1].x, y: landmarks[1].y }
 
-          // Ears: position them on the sides of the face at eye level
-          // Use face width to determine ear position
-          const faceLeft = landmarks[234].x  // Left edge of face
-          const faceRight = landmarks[454].x // Right edge of face
-          const earY = eyes.y // Same height as eyes
+          const faceLeft = landmarks[234].x
+          const faceRight = landmarks[454].x
+          const earY = eyes.y
           
-          const leftEar = { x: faceLeft - 0.05, y: earY }  // Slightly outside left edge
-          const rightEar = { x: faceRight + 0.05, y: earY } // Slightly outside right edge
+          const leftEar = { x: faceLeft - 0.05, y: earY }
+          const rightEar = { x: faceRight + 0.05, y: earY }
 
-          onFaceUpdate({ eyes, lips, nose, leftEar, rightEar })
+          onFaceUpdate({ eyes, leftEye, rightEye, lips, nose, leftEar, rightEar })
         }
 
       
@@ -99,13 +90,12 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
         if (handResults.landmarks && handResults.landmarks.length > 0) {
           const hands = handResults.landmarks.map((hand, idx) => ({
             landmarks: hand,
-            handedness: handResults.handednesses[idx][0].categoryName, // "Left" or "Right"
-            center: hand[9] // Middle of palm
+            handedness: handResults.handednesses[idx][0].categoryName,
+            center: hand[9]
           }))
           onHandsUpdate(hands)
         }
 
-        // Draw landmarks on canvas for debugging
         drawLandmarks(faceResults, handResults)
       } catch (error) {
         console.error('Prediction error:', error)
@@ -119,7 +109,6 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Draw face landmarks
       if (faceResults.faceLandmarks && faceResults.faceLandmarks[0]) {
         ctx.fillStyle = 'cyan'
         faceResults.faceLandmarks[0].forEach(landmark => {
@@ -129,7 +118,6 @@ export default function MediaPipeTracker({ onFaceUpdate, onHandsUpdate }) {
         })
       }
 
-      // Draw hand landmarks
       if (handResults.landmarks) {
         ctx.fillStyle = 'magenta'
         handResults.landmarks.forEach(hand => {
