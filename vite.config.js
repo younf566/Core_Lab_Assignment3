@@ -6,5 +6,9 @@ export default defineConfig({
   base: '/Core_Lab_Assignment3/',
   build: {
     outDir: 'dist'
+  },
+  server: {
+    port: 3000,
+    open: true
   }
 })

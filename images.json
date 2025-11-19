@@ -20,5 +20,15 @@
   { "id": "lip_yellow", "title": "Lip Yellow", "url": "lip_yellow.png" },
   { "id": "mouth_cyan", "title": "Mouth Cyan", "url": "mouth_cyan.png" },
   { "id": "nose_magenta", "title": "Nose Magenta", "url": "nose_magenta.png" },
-  { "id": "nose_yellow", "title": "Nose Yellow", "url": "nose_yellow.png" }
+  { "id": "nose_yellow", "title": "Nose Yellow", "url": "nose_yellow.png" },
+  {
+    "id": "img1",
+    "src": "https://via.placeholder.com/300x200?text=Image+1",
+    "title": "Sample Image 1"
+  },
+  {
+    "id": "img2",
+    "src": "https://via.placeholder.com/300x200?text=Image+2",
+    "title": "Sample Image 2"
+  }
 ]
