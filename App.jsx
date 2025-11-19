@@ -1,9 +1,81 @@
 import React, { useState, useRef } from 'react'
-import imagesData from './images.json'
-import ImageCard from './ImageCard'
-import parts from './parts.json'
-import PartLayer from './PartLayer'
-import MediaPipeTracker from './MediaPipeTracker'
+
+// Use fallback data if JSON files don't exist
+const imagesData = []
+const parts = {
+  "eyes": {
+    "title": "Eyes",
+    "c": "eye_cyan.png",
+    "m": "eyes_magenta.png", 
+    "y": "eyes_yellow.png",
+    "posX": 0,
+    "posY": -120,
+    "posRot": 0
+  },
+  "lips": {
+    "title": "Lips",
+    "c": "mouth_cyan.png",
+    "m": "lips_magenta.png",
+    "y": "lip_yellow.png",
+    "posX": 0,
+    "posY": 60,
+    "posRot": 0
+  },
+  "nose": {
+    "title": "Nose",
+    "m": "nose_magenta.png",
+    "y": "nose_yellow.png",
+    "posX": 0,
+    "posY": -20,
+    "posRot": 0
+  },
+  "ears": {
+    "title": "Ears",
+    "c": "ear_cyan.png",
+    "m": "ears_magenta.png",
+    "y": "ears_yellow.png",
+    "posX": 0,
+    "posY": -80,
+    "posRot": 0
+  },
+  "arm_right": {
+    "title": "Arm Right",
+    "c": "arms_cyan_right.png",
+    "m": "arms_right_magenta.png",
+    "y": "arms_right_yellow.png",
+    "posX": -180,
+    "posY": 40,
+    "posRot": -15
+  },
+  "arm_left": {
+    "title": "Arm Left",
+    "c": "arms_cyan_left.png",
+    "m": "arms_left_magenta.png",
+    "y": "arms_left_yellow.png",
+    "posX": 180,
+    "posY": 40,
+    "posRot": 15
+  }
+}
+
+// Simple fallback components
+const ImageCard = ({ img, idx, onDragStart, onDragEnter, className }) => (
+  <div
+    className={className}
+    draggable
+    onDragStart={(e) => onDragStart(e, idx)}
+    onDragEnter={(e) => onDragEnter(e, idx)}
+  >
+    <img src={img.src} alt={img.title} style={{width: '100%'}} />
+    <p>{img.title}</p>
+  </div>
+)
+
+const MediaPipeTracker = ({ onFaceUpdate, onHandsUpdate }) => (
+  <div style={{ padding: '10px', background: '#f0f0f0', fontSize: '12px' }}>
+    MediaPipe Tracker Placeholder
+  </div>
+)
 
 export default function App() {
   const [images, setImages] = useState(imagesData)
